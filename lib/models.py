@@ -16,6 +16,8 @@ class Company(Base):
     name = Column(String())
     founding_year = Column(Integer())
 
+    freebies = relationship('Freebie', backref='company', lazy='dynamic')
+
     def __repr__(self):
         return f'<Company {self.name}>'
 
@@ -23,7 +25,21 @@ class Dev(Base):
     __tablename__ = 'devs'
 
     id = Column(Integer(), primary_key=True)
-    name= Column(String())
+    name = Column(String())
+
+    freebies = relationship('Freebie', backref='dev', lazy='dynamic')
 
     def __repr__(self):
         return f'<Dev {self.name}>'
+
+class Freebie(Base):
+    __tablename__ = 'freebies'
+
+    id = Column(Integer(), primary_key=True)
+    item_name = Column(String())
+    value = Column(Integer())
+    dev_id = Column(Integer(), ForeignKey('devs.id'))
+    company_id = Column(Integer(), ForeignKey('companies.id'))
+
+    def __repr__(self):
+        return f'<Freebie {self.item_name} - Dev: {self.dev.name}, Company: {self.company.name}>'
